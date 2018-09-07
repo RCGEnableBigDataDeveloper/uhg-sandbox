@@ -21,7 +21,7 @@ hive -f /tmp/locations.ddl
 
 Load the location data from the locations.csv file
 ```
-load data local inpath '/tmp/retail_locations.csv' into table locations;
+load data local inpath '/tmp/locations.csv' into table locations;
 
 ```
 
@@ -50,61 +50,51 @@ Following the same approach, we can restrict access to columns
 select CASE WHEN p.username = current_user() THEN brandname ELSE NULL END as brandname, status_code From locations t, permission p limit 10; 
 ```
 
+### Using MapR ACE's to control access
+
+Mapr Access Control Expressions provide more fine graineid control than standard POSIX Access Control Lists (ACL's). One major advantage of ACE's is the addition of "roles"
+See https://mapr.com/docs/52/SecurityGuide/FileDirACE.html
 
 
-End with an example of getting some data out of the system or using it for a little demo
+### Example of using MapR ACE roles to restrict access
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+Add a role to the MapR ACE control file /opt/mapr/conf/m7_permissions_roles_refimpl.conf
 
 ```
-Give an example
+test_role:
+root
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
+Add a file to HDFS /tmp directory
 
 ```
-Give an example
+touch myfile && hadoop fs -put myfile /tmp
 ```
 
-## Deployment
+Apply a "read" ACE to the file 
 
-Add additional notes about how to deploy this on a live system
+```
+hadoop mfs -setace -readfile 'r:test_role' /tmp/myfile
+```
 
-## Built With
+Try to read the file as a non root user
+```
+su user1
+hadoop fs -cat /tmp/myfile
+```
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+Invalidate the roles cache
+```
+/opt/mapr/server/mrconfig dbrolescache invalidate
+```
 
-## Contributing
+You Will see an error similiar to the following
+```
+18/09/07 10:32:45 ERROR fs.Inode: Marking failure for: /tmp/myfile, error: Input/output error
+18/09/07 10:32:45 ERROR fs.Inode: Throwing exception for: /tmp/myfile, error: Input/output error
+2018-09-07 10:32:45,2695 ERROR Client fs/client/fileclient/cc/client.cc:5653 Thread: 19619 ReadRPC: /tmp/myfile, error 13, deleting fid 2050.42.393860 from cache, for off 0 node 10.0.2.15:5660
+2018-09-07 10:32:45,2695 ERROR Client fs/client/fileclient/cc/client.cc:5667 Thread: 19619 Read failed for file /tmp/myfile, error Permission denied(13), off 0 len 8192 for fid 2050.42.393860
+cat: 2050.42.393860 /tmp/myfile (Input/output error)
+```
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
 
