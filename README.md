@@ -14,20 +14,43 @@ Java 1.8.x, MapR 6.0.1, Hive CLI
 
 To reproduce the POC function, please run the following steps
 
-Create the permissions table in Hive
+Create a locations table in Hive using the supplied locations.ddl file
+```
+hive -f /tmp/locations.ddl
+```
+
+Load the location data from the locations.csv file
+```
+load data local inpath '/tmp/retail_locations.csv' into table locations;
+
+```
+
+Create a  permissions table in Hive
 ```
 create table permission( username string, uid string);
 ```
 
-insert a user profile record into the permission table
+Insert a user profile record into the permission table
 ```
 insert into permission values( 'root', '0' );
 ```
 
 Create a view by joining the location table with the permission table on key "current_user". This will leverage the Hive current user UDF which will return the name of the user running the query 
 ```
-create view secure_locations AS select d.* from test d inner join permission p on d.status_code=p.uid where username = current_user(); 
+create view secure_locations AS select d.* from locations d inner join permission p on d.status_code=p.uid where username = current_user(); 
 ```
+
+Select status_code from the view. Only records with status code matching the users uid will be returned (d.status_code=p.uid)
+```
+select status_code from secure_locations limit 10;
+
+```
+Following the same approach, we can restrict access to columns
+```
+select CASE WHEN p.username = current_user() THEN brandname ELSE NULL END as brandname, status_code From locations t, permission p limit 10; 
+```
+
+
 
 End with an example of getting some data out of the system or using it for a little demo
 
