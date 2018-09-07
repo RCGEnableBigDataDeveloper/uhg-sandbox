@@ -8,7 +8,7 @@ This POC requires an instance of MapR Coverged Platform running Hive. The steps 
 
 ### Prerequisites
 
-Java 1.8.x, MapR 6.0.1, Hive CLI
+Java 1.8.x, MapR 6.0.1, Hive 
 
 ### Installing
 
