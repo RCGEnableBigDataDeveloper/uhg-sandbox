@@ -1,4 +1,4 @@
-create table test(
+create table locations(
 name  varchar(256),
 brandname  varchar(256),
 pb_id  varchar(256),
