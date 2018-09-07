@@ -1,33 +1,32 @@
-# Project Title
+# ARA-AllStars POC - Separation of data (filesystem and database)
 
-One Paragraph of project description goes here
+Reverse engineered POC outlined in ARA-AllStars deck into new POC on local MapR cluster using same approach for separation of data (row and column level security)
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+This POC requires an instance of MapR Coverged Platform running Hive. The steps to run the POC are listed below
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+Java 1.8.x, MapR 6.0.1, Hive CLI
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+To reproduce the POC function, please run the following steps
 
-Say what the step will be
-
+Create the permissions table in Hive
 ```
-Give the example
+create table permission( username string, uid string);
 ```
 
-And repeat
-
+insert a user profile record into the permission table
 ```
-until finished
+insert into permission values( 'root', '0' );
+```
+
+Create a view by joining the location table with the permission table on key "current_user". This will leverage the Hive current user UDF which will return the name of the user running the query 
+```
+create view secure_locations AS select d.* from test d inner join permission p on d.status_code=p.uid where username = current_user(); 
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
