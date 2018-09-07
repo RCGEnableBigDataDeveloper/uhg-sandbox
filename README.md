@@ -1,4 +1,4 @@
-# ARA-AllStars POC - Separation of data (filesystem and database)
+# POC - Separation of data (filesystem and database)
 
 Reverse engineered POC outlined in ARA-AllStars deck into new POC on local MapR cluster using same approach for separation of data (row and column level security)
 
