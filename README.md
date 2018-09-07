@@ -21,7 +21,7 @@ hive -f /tmp/locations.ddl
 
 Load the location data from the locations.csv file
 ```
-load data local inpath '/tmp/locations.csv' into table locations;
+hive -e "load data local inpath '/tmp/locations.csv' into table locations;"
 
 ```
 
