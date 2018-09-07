@@ -77,15 +77,16 @@ Apply a "read" ACE to the file
 hadoop mfs -setace -readfile 'r:test_role' /tmp/myfile
 ```
 
+Invalidate the roles cache
+```
+/opt/mapr/server/mrconfig dbrolescache invalidate
+```
+
+
 Try to read the file as a non root user
 ```
 su user1
 hadoop fs -cat /tmp/myfile
-```
-
-Invalidate the roles cache
-```
-/opt/mapr/server/mrconfig dbrolescache invalidate
 ```
 
 You Will see an error similiar to the following
