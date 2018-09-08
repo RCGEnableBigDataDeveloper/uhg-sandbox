@@ -52,7 +52,7 @@ select CASE WHEN p.username = current_user() THEN brandname ELSE NULL END as bra
 
 ### Using MapR ACE's to control access
 
-Mapr Access Control Expressions provide more fine graineid control than standard POSIX Access Control Lists (ACL's). One major advantage of ACE's is the addition of "roles"
+Mapr Access Control Expressions provide more fine grained control than standard POSIX Access Control Lists (ACL's). One major advantage of ACE's is the addition of "roles".
 See https://mapr.com/docs/52/SecurityGuide/FileDirACE.html
 
 
