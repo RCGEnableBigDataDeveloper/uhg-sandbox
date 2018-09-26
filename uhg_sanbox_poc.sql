@@ -5,19 +5,16 @@ show databases;
 show tables in project3_test;
 
 set mapreduce.job.queuename=araadh_q1.aratech_sq1;
-set hive.auto.convert.join.noconditionaltask.size = 10000000; 
-set hive.support.concurrency = true; 
-set hive.enforce.bucketing = true; 
-set hive.exec.dynamic.partition.mode = nonstrict; 
-set hive.txn.manager = org.apache.hadoop.hive.ql.lockmgr.DbTxnManager; 
+set hive.auto.convert.join.noconditionaltask.size = 10000000;
+set hive.support.concurrency = true;
+set hive.enforce.bucketing = true;
+set hive.exec.dynamic.partition.mode = nonstrict;
+set hive.txn.manager = org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
 set hive.compactor.initiator.on = true;
 set hive.compactor.worker.threads = 1 ;
 
 select * from locations limit 100;
 select * from secure_locations limit 100;
-
-update locations set group_id = 500 where source='polygon';
-
 
 -- locations stage
 drop table locations_stg;
@@ -60,7 +57,7 @@ timezone varchar(100),
 zips varchar(100),
 id int,
 group_id int)
-CLUSTERED BY (state_name) INTO 50 BUCKETS STORED AS ORC 
+CLUSTERED BY (state_name) INTO 50 BUCKETS STORED AS ORC
 TBLPROPERTIES ("transactional"="true",
   "skip.header.line.count"="1",
   "compactor.mapreduce.map.memory.mb"="2048",     -- specify compaction map job properties
@@ -71,6 +68,6 @@ TBLPROPERTIES ("transactional"="true",
 
 load data inpath '/user/eperler/uscitiesv1.4.csv' into table locations_stg;
 
-create view secure_locations AS select d.* from locations d inner join permissions p on d.group_id=p.gid where username = current_user(); 
+create view secure_locations AS select d.* from locations d inner join permissions p on d.group_id=p.gid where username = current_user();
 
 select d.* from locations d inner join permissions p on d.group_id=p.gid where username = current_user() limit 10;
