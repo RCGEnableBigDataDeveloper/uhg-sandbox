@@ -17,7 +17,7 @@ Example:
     {
         "type": "auth",
         "resources": [{
-            "name": "test",
+            "name": "BASE_TABLE",
             "segments": [{
                 "name": "TABLE_000",
                 "segment": "000",
@@ -66,11 +66,10 @@ def process(cmd):
 if __name__ == '__main__':
     
         spark = SparkSession.builder.enableHiveSupport().getOrCreate()
-        segments = ["000", "001", "002"]
         data = ('''{
             "type": "auth",
             "resources": [{
-                "name": "test",
+                "name": "BASE_TABLE",
                 "segments": [{
                     "name": "TABLE_000",
                     "segment": "000",
