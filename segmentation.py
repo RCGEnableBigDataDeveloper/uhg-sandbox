@@ -14,21 +14,25 @@ authorization using Hive SQL Standard Authoriaztion.
 Example:
    The following json structure...
 
-{
-    "type": "auth",
-    "resources": {
-        "name": "BASE_TABLE",
-        "segments": {
-            "name": "TABLE_002",
-            "segment": "002",
-            "groups": [
-                "g7",
-                "g8",
-                "g9"
-            ]
-        }
+    {
+        "type": "auth",
+        "resources": [{
+            "name": "test",
+            "segments": [{
+                "name": "TABLE_000",
+                "segment": "000",
+                "groups": ["g1", "g2", "g3"]
+            },{
+                "name": "TABLE_001",
+                "segment": "001",
+                "groups": ["g4", "g5", "g6"]
+            },{
+                "name": "TABLE_002",
+                "segment": "002",
+                "groups": ["g7", "g8", "g9"]
+            }]
+        }]
     }
-}
 
 will execute the following SQL statements against hive...
 
