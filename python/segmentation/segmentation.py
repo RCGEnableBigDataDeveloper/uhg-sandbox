@@ -1,10 +1,13 @@
 import sys
 import json
-from pyspark import SparkConf, SparkContext
+import subprocess
+
+from pyspark.sql.session import SparkSession
 from pyspark.sql import SQLContext
 from pyspark.sql import HiveContext
 from pyspark.sql import SparkSession
-import subprocess
+from templates.templates import Template
+
 
 """ Generate segmentation tables
 
@@ -62,14 +65,27 @@ def process(cmd):
         print line,
     retval = p.wait()    
 
-    
+def createTable(sql, partition, table, format):
+    spark = SparkSession.builder.enableHiveSupport().getOrCreate()
+    df = spark.sql(sql)
+    for row in df.dtypes :
+        print "{0}:{1}".format(row[0],row[1])
+    df.write.format(format).partitionBy(partition).saveAsTable(table)
+
 if __name__ == '__main__':
     
-        spark = SparkSession.builder.enableHiveSupport().getOrCreate()
+        print("running segmentation")
+        
+        tpl = Template
+        
+        #spark = SparkSession.builder.enableHiveSupport().getOrCreate()
+        
         data = ('''{
             "type": "auth",
             "resources": [{
                 "name": "BASE_TABLE",
+                "location" : "/datalake/uhc/ei/pi_ara_mirroring/hive/warehouse/",
+                "database" : "ara",
                 "segments": [{
                     "name": "TABLE_000",
                     "segment": "000",
@@ -88,15 +104,18 @@ if __name__ == '__main__':
         
         obj = json.loads(data)
 
-        print(obj["type"])
         for i in obj['resources']:
-            print i['name']
+            
             for j in i['segments']:                    
-                spark.sql("DROP TABLE IF EXISTS {0}".format(j["name"]));                        
-                spark.sql("CREATE TABLE {0}  AS SELECT * FROM {1} WHERE ID={2}".format(j["name"], i["name"], j["segment"]));                    
+                #spark.sql("DROP TABLE IF EXISTS {0}".format(j["name"]));                        
+                #spark.sql("CREATE TABLE {0} PARTITON ON ( MONTHS INT, DAY INT )  AS SELECT * FROM {1} WHERE ID={2}".format(j["name"], i["name"], j["segment"]));                    
                 for k in j['groups']:
-                    print("GRANT SELECT ON TABLE {0} TO USER {1}; ".format(j["name"], k))
-                    process('/opt/mapr/hive/hive-2.1/bin/beeline -u "jdbc:hive2://localhost:10000/default" -n mapr -p mapr -e "set role admin; GRANT SELECT ON TABLE {0} TO USER {1}"'.format(j["name"], k))
+                    if(True) :
+                        print(tpl.chown.format(i["location"], i["database"], j["name"]))
+                        print(tpl.chgrp.format(k, k, i["location"], i["database"], j["name"]))
+                    else :
+                        print(tpl.grant_selectformat(j["name"], k))
+                        #process('/opt/mapr/hive/hive-2.1/bin/beeline -u "jdbc:hive2://localhost:10000/default" -n mapr -p mapr -e "set role admin; GRANT SELECT ON TABLE {0} TO USER {1}"'.format(j["name"], k))
         
         sys.exit(0)
 
