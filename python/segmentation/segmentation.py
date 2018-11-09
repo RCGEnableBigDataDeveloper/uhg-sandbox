@@ -58,64 +58,36 @@ GRANT SELECT ON TABLE TABLE_002 TO USER g8;
 GRANT SELECT ON TABLE TABLE_002 TO USER g9;
 
 """
+class Segmentation:
 
-def process(cmd):
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    for line in p.stdout.readlines():
-        print line,
-    retval = p.wait()    
-
-def createTable(sql, partition, table, format):
-    spark = SparkSession.builder.enableHiveSupport().getOrCreate()
-    df = spark.sql(sql)
-    for row in df.dtypes :
-        print "{0}:{1}".format(row[0],row[1])
-    df.write.format(format).partitionBy(partition).saveAsTable(table)
-
-if __name__ == '__main__':
+    def process(self, cmd):
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        for line in p.stdout.readlines():
+            print line,
+        retval = p.wait()   
+        print(retval) 
     
+    def createTable(self, sql, partition, table, serde):
+        spark = SparkSession.builder.enableHiveSupport().getOrCreate()
+        df = spark.sql(sql)
+        for row in df.dtypes :
+            print "{0}:{1}".format(row[0],row[1])
+        df.write.format(serde).partitionBy(partition).saveAsTable(table)
+        
+    def segment(self, data):
         print("running segmentation")
-        
+        spark = SparkSession.builder.enableHiveSupport().getOrCreate()
         tpl = Template
-        
-        #spark = SparkSession.builder.enableHiveSupport().getOrCreate()
-        
-        data = ('''{
-            "type": "auth",
-            "resources": [{
-                "name": "BASE_TABLE",
-                "location" : "/datalake/uhc/ei/pi_ara_mirroring/hive/warehouse/",
-                "database" : "ara",
-                "segments": [{
-                    "name": "TABLE_000",
-                    "segment": "000",
-                    "groups": ["g1", "g2", "g3"]
-                },{
-                    "name": "TABLE_001",
-                    "segment": "001",
-                    "groups": ["g4", "g5", "g6"]
-                },{
-                    "name": "TABLE_002",
-                    "segment": "002",
-                    "groups": ["g7", "g8", "g9"]
-                }]
-            }]
-        }''')
-        
         obj = json.loads(data)
-
         for i in obj['resources']:
             
             for j in i['segments']:                    
-                #spark.sql("DROP TABLE IF EXISTS {0}".format(j["name"]));                        
-                #spark.sql("CREATE TABLE {0} PARTITON ON ( MONTHS INT, DAY INT )  AS SELECT * FROM {1} WHERE ID={2}".format(j["name"], i["name"], j["segment"]));                    
+                spark.sql(tpl.drop_table.format(j["name"]));                        
+                spark.sql(tpl.create_table.format(j["name"], i["name"], j["segment"]));                    
                 for k in j['groups']:
                     if(True) :
                         print(tpl.chown.format(i["location"], i["database"], j["name"]))
                         print(tpl.chgrp.format(k, k, i["location"], i["database"], j["name"]))
                     else :
                         print(tpl.grant_selectformat(j["name"], k))
-                        #process('/opt/mapr/hive/hive-2.1/bin/beeline -u "jdbc:hive2://localhost:10000/default" -n mapr -p mapr -e "set role admin; GRANT SELECT ON TABLE {0} TO USER {1}"'.format(j["name"], k))
-        
-        sys.exit(0)
-
+                        self.process(tpl.grant_select_beeline.format(j["name"], k))

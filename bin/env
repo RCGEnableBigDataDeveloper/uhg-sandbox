@@ -12,14 +12,10 @@ export HADOOP_CLASSPATH=$TEZ_CONF_DIR:$TEZ_JARS:$HADOOP_CLASSPATH
 
 if [ "$1" == "hive" ]
 then
-   #hive --hiveconf tez.queue.name=arabdprd_q1 --hiveconf mapreduce.job.queuename=arabdprd_q1 --hiveconf hive.execution.engine=tez
-   echo "hive"
-   hive --hiveconf hive.root.logger=INFO,console  --hiveconf tez.queue.name=arabdprd_q1  --hiveconf hive.execution.engine=tez
+   hive --hiveconf hive.root.logger=INFO,console  --hiveconf tez.queue.name=arabdprd_q1 --hiveconf mapreduce.job.queuename=arabdprd_q1 --hiveconf hive.execution.engine=tez
 elif [ "$1" == "spark" ]
 then
    spark-shell --queue open_q1  --conf 'spark.driver.extraJavaOptions=-Dlog4j.configuration=/opt/mapr/spark/spark-2.2.1/conf'
 else
    echo "unknown command $1"
 fi
-
-#vi /opt/mapr/hive/hive-2.1/logs/eperler/eperler-hiveserver2-dbslp1580.uhc.com.log
