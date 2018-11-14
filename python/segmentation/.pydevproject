@@ -6,6 +6,5 @@
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python interpreter</pydev_property>
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
-<path>\\ms.ds.uhc.com\userdata\097\eperler\Documents\repos\uhg-sandbox\spark-core_2.11-2.1.0-mapr-1707-r6.jar</path>
 </pydev_pathproperty>
 </pydev_project>
