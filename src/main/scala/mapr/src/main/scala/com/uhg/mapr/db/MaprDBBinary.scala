@@ -1,0 +1,52 @@
+package com.uhg.mapr.db
+
+import org.apache.hadoop.hbase.HBaseConfiguration
+import org.apache.hadoop.hbase.HColumnDescriptor
+import org.apache.hadoop.hbase.HTableDescriptor
+import org.apache.hadoop.hbase.TableName
+import org.apache.hadoop.hbase.client.Admin
+import org.apache.hadoop.hbase.client.Connection
+import org.apache.hadoop.hbase.client.ConnectionFactory
+import org.apache.hadoop.hbase.client.Put
+import org.apache.hadoop.hbase.client.Table
+import org.apache.hadoop.hbase.util.Bytes
+import org.apache.hadoop.fs.Path
+import com.uhg.mapr.context.Context
+
+object MaprDBBinary extends Context with MapRDBCommon {
+
+  val configuration = HBaseConfiguration.create()
+  val connection: Connection = ConnectionFactory.createConnection(configuration)
+  val admin: Admin = connection.getAdmin();
+
+  def getOrCreateTable(tableName: String, families: Seq[String]): Boolean = {
+    val tableDesc: HTableDescriptor = new HTableDescriptor(TableName.valueOf(tableName))
+    for (family <- families) {
+      tableDesc.addFamily(new HColumnDescriptor(family))
+    }
+    if (!admin.tableExists(tableDesc.getTableName())) {
+      admin.createTable(tableDesc);
+      true
+    } else {
+      false
+    }
+  }
+
+  def deleteTable(tableName: String): Boolean = {
+    false
+
+  }
+
+  def getTables(): java.util.List[Path] = { null }
+
+  def add(rowId: String, family: String, tableName: String, data: Map[String, Any]): Unit = {
+
+    val table: Table = connection.getTable(TableName.valueOf(tableName));
+    val put: Put = new Put(Bytes.toBytes(rowId));
+    data foreach ((entry) => {
+      put.addColumn(Bytes.toBytes(family), Bytes.toBytes(entry._1), Bytes.toBytes(entry._2.toString));
+    })
+
+    table.put(put);
+  }
+}
