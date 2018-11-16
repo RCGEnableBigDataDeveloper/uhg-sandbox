@@ -19,7 +19,7 @@ object MaprDBJSON extends Context with MapRDBCommon {
   }
 
   def deletTable(tableName: String): Boolean = {
-    if (!MapRDB.tableExists(tableName))
+    if (MapRDB.tableExists(tableName))
       admin.deleteTable(new Path(tableName));
     false
   }
