@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.client.Table
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.fs.Path
 import com.uhg.mapr.context.Context
+import collection.mutable.ListBuffer
 
 object MaprDBBinary extends Context with MapRDBCommon {
 
@@ -36,7 +37,14 @@ object MaprDBBinary extends Context with MapRDBCommon {
     admin.createTable(new HTableDescriptor(TableName.valueOf(tableName)));
   }
 
-  def getTables(): java.util.List[Path] = { null }
+  def getTables(): List[String] = {
+    val list = new ListBuffer[String]()
+    val tableNames = admin.listTables()
+    for(tableName <- tableNames){
+      list+= tableName.getTableName.getNameAsString
+    }
+    list.toList
+  }
 
   def add(rowId: String, family: String, tableName: String, data: Map[String, Any]): Unit = {
 
