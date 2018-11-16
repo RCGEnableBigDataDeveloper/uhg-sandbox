@@ -32,9 +32,8 @@ object MaprDBBinary extends Context with MapRDBCommon {
     }
   }
 
-  def deleteTable(tableName: String): Boolean = {
-    false
-
+  def deleteTable(tableName: String): Unit = {
+    admin.createTable(new HTableDescriptor(TableName.valueOf(tableName)));
   }
 
   def getTables(): java.util.List[Path] = { null }

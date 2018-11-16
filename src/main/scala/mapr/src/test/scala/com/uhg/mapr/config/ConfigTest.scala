@@ -4,8 +4,13 @@ import com.typesafe.config.Config
 import scala.collection.JavaConversions._
 import com.typesafe.config.Config
 import com.uhg.mapr.context.Context
+import com.uhg.mapr.db.MaprDBJSON
 
 object ConfigTest extends Context with App {
+  
+  val x = MaprDBJSON
+  val map : Map[String, Any] = x.parse()
+  println(map.get("type").get)
   
   fromConfigMap
 

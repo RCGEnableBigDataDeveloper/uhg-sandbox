@@ -26,6 +26,7 @@ version := "1.0"
 
 libraryDependencies += "org.typelevel" %% "cats-core" % "1.4.0"
 libraryDependencies += "com.typesafe" % "config" % "1.3.3"
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.2"
 
 // Here, `libraryDependencies` is a set of dependencies, and by using `+=`,
 // we're adding the cats dependency to the set of dependencies that sbt will go
