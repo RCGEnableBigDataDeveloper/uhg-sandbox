@@ -8,7 +8,7 @@ import com.uhg.mapr.db.MaprDBJSON
 
 object ConfigTest extends Context with App {
   
-  val x = MaprDBJSON
+  val x = new MaprDBJSON
   val map : Map[String, Any] = x.parse()
   println(map.get("type").get)
   

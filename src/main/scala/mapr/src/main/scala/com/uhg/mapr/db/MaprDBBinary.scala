@@ -14,7 +14,7 @@ import org.apache.hadoop.fs.Path
 import com.uhg.mapr.context.Context
 import collection.mutable.ListBuffer
 
-object MaprDBBinary extends Context with MapRDBCommon {
+class MaprDBBinary extends Context with MapRDBCommon {
 
   val configuration = HBaseConfiguration.create()
   val connection: Connection = ConnectionFactory.createConnection(configuration)

@@ -13,7 +13,7 @@ scalaVersion := "2.12.7"
 // It's possible to define many kinds of settings, such as:
 
 name := "mapr"
-organization := "ch.epfl.scala"
+organization := "org.ugh.mapr"
 version := "1.0"
 
 // Note, it's not required for you to define these three settings. These are
@@ -27,6 +27,8 @@ version := "1.0"
 libraryDependencies += "org.typelevel" %% "cats-core" % "1.4.0"
 libraryDependencies += "com.typesafe" % "config" % "1.3.3"
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.2"
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
 // Here, `libraryDependencies` is a set of dependencies, and by using `+=`,
 // we're adding the cats dependency to the set of dependencies that sbt will go
