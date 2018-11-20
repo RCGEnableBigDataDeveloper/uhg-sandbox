@@ -16,7 +16,6 @@ node_modules/
 *.log
 /build/
 .project
-bin/
 dsol-fastdata-actor.iml
 dsol-fastdata.iml
 dsol-fastdata-http.iml

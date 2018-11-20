@@ -1,0 +1,5 @@
+#!/bin/bash
+
+MAPRLIBPATH="/home/eperler/lib"
+export CLASSPATH=$(find $MAPRLIBPATH  -name '*.jar' | xargs echo | tr ' ' ':')
+java com.uhg.mapr.db.MaprDBTest
