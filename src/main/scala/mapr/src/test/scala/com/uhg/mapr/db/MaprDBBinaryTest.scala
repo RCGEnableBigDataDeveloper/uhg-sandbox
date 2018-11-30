@@ -4,26 +4,20 @@ import com.uhg.mapr.context.Context
 import org.apache.hadoop.fs.Path
 import scala.collection.JavaConversions._
 import org.scalatest._
+import java.util.UUID
 
-object MaprDBTest extends Context with App {
+object MaprDBBinaryTest extends Context with App {
 
-  val mapr = new MaprDBJSON
+  val mapr = new MaprDBBinary
 
   val tableName: String = "/user/eperler/segmentation_db_json"
 
-  getMessage
   getTables
   add
   findAll
 
-  def getMessage(): Unit = {
-    val map: Map[String, Any] = mapr.parse()
-    println(map.get("type").get)
-
-  }
-
   def getTables(): Unit = {
-    val tables: java.util.List[Path] = mapr.getTables("/user/eperler/")
+    val tables: java.util.List[String] = mapr.getTables()
     for (table <- tables) {
       println(table)
     }
@@ -35,7 +29,7 @@ object MaprDBTest extends Context with App {
       "key2" -> "{\"first_name\":\"Mike\", \"last_name\":\"Smith\", \"age\" : 43 }",
       "key3" -> "{\"first_name\":\"Paul\", \"last_name\":\"Rogers\", \"age\" : 52 }")
 
-    mapr.add(tableName, data)
+    mapr.add(UUID.randomUUID().toString, "cf", tableName, data)
   }
 
   def findAll(): Unit = {
