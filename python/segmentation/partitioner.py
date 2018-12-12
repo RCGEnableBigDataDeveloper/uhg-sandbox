@@ -18,22 +18,22 @@ class Partitioner():
     def dynamicPartition(self, srcTable, destTable, columns, partition):
         y = columns.pop(columns.index(partition))
         print(self.tpl.dynamic_partition_set)
-        #self.process(self.tpl.dynamic_partition_set)
+        self.process(self.tpl.dynamic_partition_set)
         print(self.tpl.dynamic_partition_dynamic.format(srcTable, y, ",".join(columns), destTable))
-        #self.process(self.tpl.dynamic_partition_dynamic.format(srcTable, y, ",".join(columns), destTable))
+        self.process(self.tpl.dynamic_partition_dynamic.format(srcTable, y, ",".join(columns), destTable))
         
     def staticPartition(self, srcTable, destTable, columns, partition):
         now = datetime.datetime.now()
         columns.pop(columns.index(partition))
         print(self.tpl.dynamic_partition_set)
-        #self.process(self.tpl.dynamic_partition_set)
+        self.process(self.tpl.dynamic_partition_set)
         print(self.tpl.dynamic_partition_static.format("TABLE1", "{0}-{1}-{2}".format(now.day, now.month, now.year), ",".join(columns), "date", "TABLE2"))
-        #self.process(self.tpl.dynamic_partition_static.format("TABLE1", "{0}-{1}-{2}".format(now.day, now.month, now.year), ",".join(x), "date", "TABLE2"))
+        self.process(self.tpl.dynamic_partition_static.format("TABLE1", "{0}-{1}-{2}".format(now.day, now.month, now.year), ",".join(columns), "date", "TABLE2"))
     
 if __name__ == '__main__':
     p = Partitioner()
     columns =  ['id', 'name', "address", "date"]
-    #p.dynamicPartition("SRC_TABLE","DEST_TABLE",columns,"date")
+    p.dynamicPartition("SRC_TABLE","DEST_TABLE",columns,"date")
     
     columns = ['id', 'name', "address", "date"]
     p.staticPartition("SRC_TABLE","DEST_TABLE",columns,"date")
