@@ -58,7 +58,7 @@ GRANT SELECT ON TABLE TABLE_002 TO USER g8;
 GRANT SELECT ON TABLE TABLE_002 TO USER g9;
 
 """
-class Segmentation:
+class Segmentation():
 
     def process(self, cmd):
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
