@@ -76,18 +76,18 @@ class Segmentation():
         
     def segment(self, data):
         print("running segmentation")
-        spark = SparkSession.builder.enableHiveSupport().getOrCreate()
+        #spark = SparkSession.builder.enableHiveSupport().getOrCreate()
         tpl = Template
         obj = json.loads(data)
         for i in obj['resources']:
             
             for j in i['segments']:                    
-                spark.sql(tpl.drop_table.format(j["name"]));                        
-                spark.sql(tpl.create_table.format(j["name"], i["name"], j["segment"]));                    
+                #spark.sql(tpl.drop_table.format(j["name"]));                        
+                #spark.sql(tpl.create_table.format(j["name"], i["name"], j["segment"]));                    
                 for k in j['groups']:
                     if(True) :
                         print(tpl.chown.format(i["location"], i["database"], j["name"]))
                         print(tpl.chgrp.format(k, k, i["location"], i["database"], j["name"]))
                     else :
                         print(tpl.grant_selectformat(j["name"], k))
-                        self.process(tpl.grant_select_beeline.format(j["name"], k))
+                        #self.process(tpl.grant_select_beeline.format(j["name"], k))
