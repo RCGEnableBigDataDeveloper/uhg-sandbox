@@ -83,7 +83,9 @@ class Segmentation():
             
             for j in i['segments']:                    
                 #spark.sql(tpl.drop_table.format(j["name"]));                        
-                #spark.sql(tpl.create_table.format(j["name"], i["name"], j["segment"]));                    
+                #spark.sql(tpl.create_table.format(j["name"], i["name"], j["segment"]));
+                print(tpl.create_table.format(j["name"], i["name"], j["segment"]))    
+                print(tpl.stats.format(j["name"], i["name"], j["segment"]))                                    
                 for k in j['groups']:
                     if(True) :
                         print(tpl.chown.format(i["location"], i["database"], j["name"]))
